@@ -1,0 +1,67 @@
+# ===== 5(a) KVM =====
+
+egrep -c '(vmx|svm)' /proc/cpuinfo
+uname -a
+ls /lib/modules/$(uname -r)/kernel/arch/x86/kvm/
+
+sudo apt update
+sudo apt install qemu-system-x86 libvirt-daemon-system libvirt-clients bridge-utils virt-manager
+
+sudo systemctl enable --now libvirtd
+systemctl status libvirtd --no-pager
+
+sudo usermod -aG libvirt $USER
+sudo usermod -aG kvm $USER
+newgrp libvirt
+
+virsh list --all
+
+virsh
+
+Inside virsh:
+
+version
+nodeinfo
+quit
+
+virt-manager
+
+https://download.cirros-cloud.net/0.5.1/
+
+cirros-0.5.1-x86_64-disk.img
+
+
+# ===== 5(b) IMAGE CREATION =====
+
+qemu-img create -f qcow2 ubuntu_vm.qcow2 10G
+
+qemu-img info ubuntu_vm.qcow2
+
+virt-manager
+
+# ===== IMAGE RESIZING =====
+
+virsh list --all
+
+virsh shutdown YOUR_VM_NAME
+
+sudo qemu-img resize ubuntu_vm.qcow2 +10G
+
+qemu-img info ubuntu_vm.qcow2
+
+virsh start YOUR_VM_NAME
+
+Inside the VM:
+
+sudo growpart /dev/sda 1
+sudo resize2fs /dev/sda1
+
+Then on the host:
+
+# ===== IMAGE CONVERSION =====
+
+qemu-img convert -O vdi ubuntu_vm.qcow2 ubuntu_vm.vdi -p
+
+qemu-img convert -O vpc ubuntu_vm.qcow2 ubuntu_vm.vhd -p
+
+qemu-img convert -O raw ubuntu_vm.qcow2 ubuntu_vm.img -p

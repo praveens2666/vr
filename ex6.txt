@@ -1,0 +1,22 @@
+VM1 (Ubuntu/Server):
+
+sudo apt update
+sudo apt install openssh-server -y
+sudo systemctl status ssh
+ip a
+sudo ufw allow 22/tcp
+sudo ufw reload
+
+VM2 (Kali/Client):
+
+scp ubuntu@192.168.56.101:/home/ubuntu/d.txt ~/d.txt
+
+ssh ubuntu@<VM1-IP>
+
+Then file transfer:
+
+scp file.txt ubuntu@<VM1-IP>:/home/ubuntu/
+
+From VM1 → VM2:
+
+scp ubuntu@<VM1-IP>:/home/ubuntu/serverfile.txt /home/kali/
